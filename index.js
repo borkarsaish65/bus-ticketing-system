@@ -9,6 +9,14 @@ app.use(function(req, res, next) {
     next();
 });
 
+// 404 error
+app.all('*', (req, res, next) => {
+console.log(req);
+    const err = new HttpException(404, 'Endpoint Not Found');
+    next(err);
+});
+
+
 app.listen(port=8080, () =>
     console.log(`🚀 Server running on port ${port}!`)
 );
