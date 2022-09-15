@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-
+const ticketsRouter = require('./src/routes/tickets.router');
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -10,6 +10,9 @@ app.use(function(req, res, next) {
 });
 
 // 404 error
+
+app.use('/api',ticketsRouter)
+
 app.all('*', (req, res, next) => {
 console.log(req);
     const err = new HttpException(404, 'Endpoint Not Found');
