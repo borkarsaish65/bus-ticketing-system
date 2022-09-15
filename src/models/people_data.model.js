@@ -1,7 +1,8 @@
 const query = require('../services/db');
 const {
     multipleColumnSet,
-    insertionColumnSet
+    insertionColumnSet,
+    insertIntoColumnSet
 } = require('../helper/sqlQueryHelperFunctions');
 
 
@@ -35,7 +36,7 @@ class PeopleData {
             columnSet,
             fields,
             values
-        } = insertionColumnSet(params);
+        } = insertIntoColumnSet(params);
 
         const sql = `INSERT INTO ${this.tableName}(${columnSet})VALUES (${fields})`;
         console.log(sql,[...values],'<--')

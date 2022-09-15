@@ -5,6 +5,7 @@ const {
     v4: uuidv4
 } = require('uuid');
 const userLoginModel = require('../models/user-login.model');
+const jwt = require('jsonwebtoken');
 
 class TicketController {
     
@@ -63,7 +64,7 @@ class TicketController {
 
     }
     updateTicketStatus  = async(req, res, next) => {
-        console.log(req.body)
+
         let {
             ticket_id
         } = req.params;
@@ -160,7 +161,54 @@ class TicketController {
 
     }
 
+    userLogin = async(req, res, next) => {
 
+        let {
+            username,
+            password
+        } = req.body;
+
+
+        let userData = await userLoginModel.findAll({
+            username,
+            password
+        })
+
+        if(userData.length == 0)
+        {
+            throw new HttpException(400,'User data does not exists.')       
+        }
+
+        const token = jwt.sign({ id: userData[0].id.toString() }, process.env.JWT_KEY, {
+            expiresIn: '6h'
+        });
+
+        console.log(token)
+
+        res.status(200).send({
+            message:'logged in successfully',
+            token,
+            id:userData[0].id
+        })
+
+
+    }
+    resetAllTickets  = async(req, res, next) => {
+
+        let updateStatus = await ticketModel.update({status:'open',booked_at:null,booked_by:null});
+        console.log(updateStatus)
+        if(updateStatus >= 1)
+        {
+            return res.status(200).send({
+                message:'All records have been reset to open'
+            })
+        }
+
+        return res.status(400).send({
+            message:'Updation failed.'
+        })
+
+    }
 
 }
 

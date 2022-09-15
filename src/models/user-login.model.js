@@ -1,7 +1,8 @@
 const query = require('../services/db');
 const {
     multipleColumnSet,
-    insertionColumnSet
+    insertionColumnSet,
+    insertIntoColumnSet
 } = require('../helper/sqlQueryHelperFunctions');
 
 
@@ -18,7 +19,7 @@ class UserLogin {
             let {
                 columnSet,
                 values
-            } = multipleColumnSet(params);
+            } = insertionColumnSet(params);
     
             sql +=  ` where ${columnSet} `;
             console.log(sql,[...values]);
