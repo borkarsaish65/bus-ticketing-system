@@ -22,7 +22,6 @@ class PeopleData {
             } = multipleColumnSet(params);
     
             sql +=  ` where ${columnSet} `;
-            console.log(sql,[...values]);
             return await query(sql,[...values]);
         }
 
@@ -39,7 +38,6 @@ class PeopleData {
         } = insertIntoColumnSet(params);
 
         const sql = `INSERT INTO ${this.tableName}(${columnSet})VALUES (${fields})`;
-        console.log(sql,[...values],'<--')
         const result = await query(sql, [...values]);
         const affectedRows = result ? result.affectedRows : 0;
         return affectedRows;

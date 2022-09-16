@@ -9,6 +9,7 @@ const allRequestMiddlewareErrorHandler = require('../middlewares/allRequestMiddl
 
 router.get('/view-tickets/:user_id',auth(),allRequestMiddlewareErrorHandler(ticketController.viewTickets));
 router.get('/view-ticket/:user_id/:ticket_id',auth(),allRequestMiddlewareErrorHandler(ticketController.viewSingleTicket));
+router.get('/view-user-details/:user_id/:ticket_id',auth(),allRequestMiddlewareErrorHandler(ticketController.viewUserDetailsOnTicketId));
 router.post('/update-ticket/:user_id/:ticket_id',auth(),allRequestMiddlewareErrorHandler(ticketController.updateTicketStatus));
 router.post('/reset-all-tickets/:user_id',auth(['admin']),allRequestMiddlewareErrorHandler(ticketController.resetAllTickets));
 router.post('/login',allRequestMiddlewareErrorHandler(ticketController.userLogin));

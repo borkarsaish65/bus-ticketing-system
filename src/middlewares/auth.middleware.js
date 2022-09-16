@@ -29,7 +29,7 @@ const auth = (role=['standard','admin']) => {
 
             if(!role.includes(userData[0].role))
             {
-                throw new HttpException(401, 'Cannot access this route.');      
+                throw new HttpException(401, 'Unauthorized. Cannot access this route.');      
             }
 
 

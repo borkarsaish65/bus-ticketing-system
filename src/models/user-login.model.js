@@ -22,7 +22,6 @@ class UserLogin {
             } = insertionColumnSet(params);
     
             sql +=  ` where ${columnSet} `;
-            console.log(sql,[...values]);
             return await query(sql,[...values]);
         }
 

@@ -6,6 +6,7 @@ const {
 } = require('uuid');
 const userLoginModel = require('../models/user-login.model');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 class TicketController {
     
@@ -170,8 +171,7 @@ class TicketController {
 
 
         let userData = await userLoginModel.findAll({
-            username,
-            password
+            username
         })
 
         if(userData.length == 0)
@@ -179,11 +179,15 @@ class TicketController {
             throw new HttpException(400,'User data does not exists.')       
         }
 
+        const isMatch = await bcrypt.compare(password, userData[0].password) ? true : false; //await bcrypt.compare(pass, user.password);
+
+        if (!isMatch) {
+            throw new HttpException(401, 'Incorrect old password.');
+        }
+
         const token = jwt.sign({ id: userData[0].id.toString() }, process.env.JWT_KEY, {
             expiresIn: '6h'
         });
-
-        console.log(token)
 
         res.status(200).send({
             message:'logged in successfully',
@@ -196,7 +200,7 @@ class TicketController {
     resetAllTickets  = async(req, res, next) => {
 
         let updateStatus = await ticketModel.update({status:'open',booked_at:null,booked_by:null});
-        console.log(updateStatus)
+
         if(updateStatus >= 1)
         {
             return res.status(200).send({
@@ -206,6 +210,33 @@ class TicketController {
 
         return res.status(400).send({
             message:'Updation failed.'
+        })
+
+    }
+    viewUserDetailsOnTicketId  = async(req, res, next) => {
+
+        let {
+            ticket_id
+        } = req.params;
+
+        let ticketData = await ticketModel.findAll({ticket_id});
+
+        if(ticketData.length == 0)
+        {
+            throw new HttpException(400,'No ticket data found for this ticket_id');
+        }
+
+        if(ticketData[0].status == 'open')
+        {
+            throw new HttpException(400,'The ticket is open.');
+        }
+
+        let userDetails = await peopleDataModel.findAll({
+            unique_id:ticketData[0].booked_by
+        })
+
+        return res.status(200).send({
+            userDetails:userDetails[0]
         })
 
     }

@@ -22,7 +22,6 @@ class TicketTable {
             } = multipleColumnSet(params);
     
             sql +=  ` where ${columnSet} `;
-            console.log(sql,[...values]);
             return await query(sql,[...values]);
         }
 
@@ -39,7 +38,6 @@ class TicketTable {
         } = insertIntoColumnSet(params);
 
         const sql = `INSERT INTO ${this.tableName}(${columnSet})VALUES (${fields})`;
-        console.log(sql,[...values],'<--')
         const result = await query(sql, [...values]);
         const affectedRows = result ? result.affectedRows : 0;
         return affectedRows;
@@ -51,15 +49,14 @@ class TicketTable {
 
         let sql = `UPDATE ${this.tableName} set ` + Object.keys(setObject).map((field)=>` ${field} = ? `).join(',');
            
-            if(Object.keys(whereObj).length > 0)
-            {
-                sql += ' where '+ Object.keys(whereObj).map((field)=>` ${field} = ? `).join(' AND ');
-            }
+        if(Object.keys(whereObj).length > 0)
+        {
+            sql += ' where '+ Object.keys(whereObj).map((field)=>` ${field} = ? `).join(' AND ');
+        }
 
-            console.log(sql, [...values])
-            const result = await query(sql, [...values]);
-            const affectedRows = result ? result.affectedRows : 0;
-            return affectedRows;
+        const result = await query(sql, [...values]);
+        const affectedRows = result ? result.affectedRows : 0;
+        return affectedRows;
 
 
     }

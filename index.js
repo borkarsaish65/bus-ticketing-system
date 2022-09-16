@@ -20,7 +20,6 @@ app.use(express.urlencoded({
 app.use('/api',ticketsRouter)
 
 app.all('*', (req, res, next) => {
-console.log(req);
     const err = new HttpException(404, 'Endpoint Not Found');
     next(err);
 });
