@@ -20,9 +20,9 @@ const auth = (role=['standard','admin']) => {
 
             const userData = await userLoginModel.findAll({id:decoded.id});
 
-            const ownerAuthorized =req.params.user_id;
+            const ownerAuthorized =req.params.user_id == userData[0].id;
 
-            const ownerAuthThroughBody =req.body.user_id;
+            const ownerAuthThroughBody =req.body.user_id == userData[0].id;
 
             if (!ownerAuthorized && !ownerAuthThroughBody)
                 throw new HttpException(401, 'Unauthorized');
